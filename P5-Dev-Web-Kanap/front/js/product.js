@@ -20,7 +20,10 @@ const getArticle = () => {
         addImg.setAttribute("src", `${data.imageUrl}`) //ajout de l'image par son url
 
         const addDescription = (document.getElementById("description").innerHTML=data.description) //création de la description du canapé
-
+        const addOption = document.getElementById("colors") //création des choix de couleur du canapé
+        for (dyeing in data.colors) {
+            addOption.innerHTML += `<option value= "${data.colors[dyeing]}">"${data.colors[dyeing]}"</option>`
+        }
 
     })
 }
