@@ -34,7 +34,7 @@ getArticle()
 const button = document.getElementById("addToCart");
 const mistake = document.createElement("div");
 document.querySelector(".item__content__addButton").appendChild(mistake);
-var addprodLocalStorage = [];
+const addprodLocalStorage = [];
 
 //Création "ajouter au panier"
 button.addEventListener('click', function() {
