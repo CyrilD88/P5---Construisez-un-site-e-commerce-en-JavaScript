@@ -1,5 +1,5 @@
 //Création des constantes pour la récupération et l'affichage du localstorage
-var tableauProduit = JSON.parse(localStorage.getItem('produits'));
+let tableauProduit = JSON.parse(localStorage.getItem('produits'));
 const CreationSection = document.getElementById("cart__items");
 
 
@@ -7,12 +7,12 @@ console.log(tableauProduit);
 
 function creationPanier() {
 
-    //Si le panier est vide, prévenir le client
-    if (tableauProduit === null) {
-        let vide = document.querySelector(".cartAndFormContainer > h1");
-        vide.innerText = "Votre panier est vide";
+    //Il faut prévenir le client SI le panier est vide
+    // if (tableauProduit === null) {
+    //     let vide = document.querySelector(".cartAndFormContainer > h1");
+    //     vide.innerText = "Votre panier est vide";
         
-    };
+    // };
      
     for (let article of tableauProduit) {
 
@@ -28,10 +28,7 @@ function creationPanier() {
         creationArticle.appendChild(divImage);
         divImage.classList.add("cart__item__img");
 
-        /*Importation et création de l'image
-        On appelle de nouveau la base de donnée
-        avec l'id pour pouvoir faire le lien avec l'image
-        */
+        //Importation et création de l'image
         fetch("http://localhost:3000/api/products/" + article._id)
             .then(function(res) {
                 if (res.ok) {
@@ -47,7 +44,9 @@ function creationPanier() {
             })
             .catch(erreur => alert("Erreur d'affichage" + erreur));
 
-        //Création de la div contenant le titre, la couleur, le prix unitaire, la quantité totale et le bouton supprimer
+         /*--------------------------------------------------Création des éléments ----------------------------------------------------------------------------*/   
+
+        //Création de la div comprennant le titre, la couleur, le prix unitaire, la quantité totale et le bouton supprimer
         let divContent = document.createElement("div");
         creationArticle.appendChild(divContent);
         divContent.classList.add("cart__item__content");
@@ -65,10 +64,11 @@ function creationPanier() {
         divDescription.appendChild(couleur);
         divDescription.appendChild(prixU);
         couleur.innerText = article.colors;
-        /*
-        On appelle de nouveau la base de donnée
-        avec l'id pour pouvoir faire le lien avec le nom et le prix
-        */
+
+
+        /* ---------------------------------------------------Création de la fonction pour la première partie du panier----------------------------*/
+
+        // appelle de nouveau la base de donnée + l'id pour pouvoir faire le lien avec le nom et le prix 
         fetch("http://localhost:3000/api/products/" + article._id)
         .then(function(res) {
             if (res.ok) {
@@ -123,7 +123,7 @@ creationPanier();
 //Création d'une fonction pour calculer automatiquement la quantité et le prix total
 function total() {
     //Calcul de la quantité
-    var qte = document.querySelectorAll(".itemQuantity");
+    let qte = document.querySelectorAll(".itemQuantity");
     let totalQte = 0;
 
     for (let p = 0; p < qte.length; p++) {
@@ -133,8 +133,7 @@ function total() {
     let affichageQte = document.getElementById("totalQuantity");
     affichageQte.innerText = totalQte;
 
-    /*Calcul du prix total
-    Appel de la base de donnée pour récupérer les prix unitaire */
+    /*Calcul du prix total : Appel à la base de données afin de  récupérer le prix unitaire */
     fetch("http://localhost:3000/api/products")
     .then(function(res) {
         if (res.ok) {
@@ -162,7 +161,7 @@ total();
 
 //Fonction permettant la modification de la quantité
 function modificationQte () {
-    var qte = document.querySelectorAll(".itemQuantity");
+    let qte = document.querySelectorAll(".itemQuantity");
     
     for (let p = 0; p < qte.length; p++) {
         //On écoute l'évènement de changement du focus de la case quantité
@@ -187,7 +186,7 @@ function modificationQte () {
 }
 modificationQte();
 
-//Création de la fonction du suppression d'un article
+// Suppression d'un article
 function suppressionArticle() {
     let supprimer = document.querySelectorAll(".deleteItem");
 
@@ -211,9 +210,11 @@ function suppressionArticle() {
 }
 suppressionArticle();
 
+/*-------------------------------------------------------------Création du formulaire-----------------------------------------------*/
+
 const RegexOrdinaire = new RegExp("^[a-zA-Zéèà ,.'-]+$");
 const RegexEmail = new RegExp('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$');
-const RegexAdresse = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+const RegexAdresse = new RegExp("^[0-9]{1,6}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
 
 //Création de la fonction de controle de la saisie du formulaire
 async function controleFormulaire() {
@@ -221,7 +222,7 @@ async function controleFormulaire() {
     //Déclaration des constantes et variables
     let formulaire = document.querySelector(".cart__order__form");
     
-    //Controle du prénom
+    //Prénom
     formulaire.firstName.addEventListener('input', await function(saisiePrenom) {
         let erreurPrenom = formulaire.firstName.nextElementSibling;
         
@@ -234,7 +235,7 @@ async function controleFormulaire() {
         }
     })
 
-    //Controle du Nom
+    //Nom
     formulaire.lastName.addEventListener('input', await function(saisieNom) {
         let erreurNom = formulaire.lastName.nextElementSibling;
         
@@ -247,7 +248,7 @@ async function controleFormulaire() {
         }
     })
 
-    //Controle de l'adresse
+    //Adresse
     formulaire.address.addEventListener('input', await function(saisieAdresse) {
         let erreurAdresse = formulaire.address.nextElementSibling;
         
@@ -260,7 +261,7 @@ async function controleFormulaire() {
         }
     })
 
-    //Controle de la ville
+    //Ville
     formulaire.city.addEventListener('input', await function(saisieVille) {
         let erreurVille = formulaire.city.nextElementSibling;
         
@@ -273,7 +274,7 @@ async function controleFormulaire() {
         }
     })
 
-    //Controle de l'email
+    //Email
     formulaire.email.addEventListener('input', function(saisieEmail) {
         let erreurEmail = formulaire.email.nextElementSibling;
         
@@ -291,11 +292,11 @@ controleFormulaire();
 
 
 //Création des variables pour la suite des fonctions
-var recupPrenom = document.getElementById("firstName");
-var recupNom = document.getElementById("lastName");
-var recupAdresse = document.getElementById("address");
-var recupVille = document.getElementById("city");
-var recupEmail = document.getElementById("email");
+let recupPrenom = document.getElementById("firstName");
+let recupNom = document.getElementById("lastName");
+let recupAdresse = document.getElementById("address");
+let recupVille = document.getElementById("city");
+let recupEmail = document.getElementById("email");
 
 //Création de la fonction d'envoi de la commande
 function envoiFormulaire() {
@@ -324,6 +325,7 @@ function envoiFormulaire() {
         };
 
         console.log(RegexOrdinaire.test(firstName.value));
+
         //Envoi à la base de donnée du panier et des informations de contact via une méthode POST et redirection vers la page de confirmation
         fetch("http://localhost:3000/api/products/order",{
             method: "POST",
